@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Hacker Terminal Interactive</title>
+<style>
+  body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+    font-family: monospace;
+  }
+  .console {
+    background-color: #111;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    width: 300px;
+    height: 400px;
+    overflow-y: auto;
+    border: 2px solid #444;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  .line { line-height: 1.2; }
+  .green { color: #00ff00; }
+  .white { color: #ffffff; }
+  .red { color: #ff3333; font-weight: bold; }
+  .prompt::before { content: "$ "; color: #00ff00; }
+</style>
+</head>
+<body>
+
+<div class="console" id="console1"></div>
+<div class="console" id="console2"></div>
+<div class="console" id="console3"></div>
+
+<script>
+const console1 = document.getElementById('console1');
+const console2 = document.getElementById('console2');
+const console3 = document.getElementById('console3');
+
+const userCommand = "ngotansang";
+
+// Sinh random các loại dữ liệu hacker-like
+const hexChars = "0123456789ABCDEF";
+function randomHex(len=8) { let s=""; for(let i=0;i<len;i++) s+=hexChars[Math.floor(Math.random()*16)]; return "0x"+s; }
+function randomDec(max=99999){ return Math.floor(Math.random()*max); }
+function randomIP(){ return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`; }
+function randomPort(){ return Math.floor(Math.random()*65535); }
+function randomPath(){ return `/usr/lib/${Math.random().toString(36).substring(2,8)}`; }
+function randomLibrary(){ return `lib${Math.random().toString(36).substring(2,5)}.so`; }
+function randomAPI(){ return `api/v${Math.floor(Math.random()*10)}/${Math.random().toString(36).substring(2,5)}`; }
+function randomSIM(){ return `SIM${Math.floor(Math.random()*9999)}`; }
+function randomCER(){ return `CERT-${Math.random().toString(36).substring(2,6)}`; }
+
+function generateHackerLine() {
+  const templates = [
+    () => `LOAD LIBRARY ${randomLibrary()}`,
+    () => `ACCESS PORT ${randomPort()}`,
+    () => `CONNECT API ${randomAPI()}`,
+    () => `FETCH PATH ${randomPath()}`,
+    () => `READ SIM ${randomSIM()}`,
+    () => `VERIFY CER ${randomCER()}`,
+    () => `HEX_VALUE ${randomHex()}`,
+    () => `DEC_VALUE ${randomDec()}`,
+    () => `SCAN IP ${randomIP()} PORT ${randomPort()}`,
+    () => `INIT MODULE ${Math.random().toString(36).substring(2,6)}`,
+    () => `DEPLOY SERVICE ${Math.random().toString(36).substring(2,4)}`
+  ];
+  let template = templates[Math.floor(Math.random()*templates.length)];
+  return template();
+}
+
+// Gõ từng ký tự
+function typeLine(consoleElement, text, colorClass="green", callback) {
+  const line = document.createElement('div');
+  line.className = `line ${colorClass} prompt`;
+  consoleElement.appendChild(line);
+  let i = 0;
+  function typeChar() {
+    if(i<text.length){
+      line.textContent += text[i++];
+      consoleElement.scrollTop = consoleElement.scrollHeight;
+      setTimeout(typeChar, 20);
+    } else if(callback) callback();
+  }
+  typeChar();
+}
+
+// Console hacker bình thường vô tận
+function runConsole(consoleElement){
+  function nextCommand(){
+    let cmd = generateHackerLine();
+    let color = Math.random()<0.2?"white":"green";
+    typeLine(consoleElement, cmd, color, ()=>{
+      setTimeout(nextCommand, 150+Math.random()*150);
+    });
+  }
+  nextCommand();
+}
+
+// Console 3: hỏi – trả lời
+function runInteractiveConsole(consoleElement){
+  function nextCommand(){
+    let askUser = Math.random()<0.1; // 10% lần hỏi user
+    if(askUser){
+      // dòng hỏi
+      typeLine(consoleElement, "QUERY USER INFO", "green", ()=>{
+        // dòng trả lời
+        setTimeout(()=> typeLine(consoleElement, ""+userCommand, "red", ()=>{
+          setTimeout(nextCommand, 200+Math.random()*200);
+        }), 200);
+      });
+    } else {
+      let cmd = generateHackerLine();
+      let color = Math.random()<0.2?"white":"green";
+      typeLine(consoleElement, cmd, color, ()=>{
+        setTimeout(nextCommand, 150+Math.random()*150);
+      });
+    }
+  }
+  nextCommand();
+}
+
+// Bắt đầu chạy
+runConsole(console1);
+runConsole(console2);
+runInteractiveConsole(console3);
+</script>
+</body>
+</html>
