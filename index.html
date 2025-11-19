@@ -2,139 +2,246 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta charset="UTF-8">
-<title>Hacker Terminal Interactive</title>
+<title>NGOTANSANG PRO MENU</title>
 <style>
-  body {
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    margin: 0;
-    font-family: monospace;
-  }
-  .console {
-    background-color: #111;
-    color: white;
-    padding: 10px;
-    margin: 5px;
-    width: 300px;
-    height: 400px;
-    overflow-y: auto;
-    border: 2px solid #444;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    font-size: 14px;
-    white-space: pre-wrap;
-  }
-  .line { line-height: 1.2; }
-  .green { color: #00ff00; }
-  .white { color: #ffffff; }
-  .red { color: #ff3333; font-weight: bold; }
-  .prompt::before { content: "$ "; color: #00ff00; }
+    body {
+        background: #111;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .menu {
+        width: 260px;
+        background: linear-gradient(135deg, #5a08a8, #8b2cff, #5a08a8);
+        background-size: 300% 300%;
+        animation: colorShift 6s ease infinite;
+        padding: 15px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px #a300ff;
+        color: white;
+    }
+
+    .menu::before {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: linear-gradient(
+            45deg,
+            transparent 40%,
+            rgba(173,255,47,0.7) 50%,
+            transparent 60%
+        );
+        animation: diagonalBeam 3s linear infinite;
+        pointer-events: none;
+        opacity: 0.45;
+    }
+
+    @keyframes colorShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes diagonalBeam {
+        0% { transform: translate(-50%, -50%); }
+        100% { transform: translate(50%, 50%); }
+    }
+
+    .menu-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+        position: relative;
+        z-index: 20;
+    }
+
+    .menu-header img {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        position: relative;
+        z-index: 30;
+        box-shadow: 0 0 12px #c000ff;
+        transition: 0.35s ease;
+    }
+
+    .menu-header img:hover {
+        transform: rotate(6deg) scale(1.07);
+        box-shadow: 0 0 18px #c000ff, 0 0 28px #d400ff;
+    }
+
+    .menu-title {
+        font-size: 20px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #ff3c00, #ff9d00, #ffe600);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: titleColor 4s linear infinite;
+        text-shadow:
+            1px 1px 2px #000,
+            -1px -1px 2px #000,
+            1px -1px 2px #000,
+            -1px 1px 2px #000;
+    }
+
+    @keyframes titleColor {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .username {
+        margin-top: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        background: linear-gradient(90deg, #00ffd2, #009dff, #00fff2);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: usernameColor 5s linear infinite;
+        text-shadow:
+            1px 1px 1px #000,
+            -1px -1px 1px #000,
+            1px -1px 1px #000,
+            -1px 1px 1px #000;
+    }
+
+    @keyframes usernameColor {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .menu-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(2px);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .menu-item-label {
+        color: #e6baff;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .switch {
+        position: relative;
+        width: 46px;
+        height: 24px;
+    }
+    .switch input {
+        display: none;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        background-color: #333;
+        border-radius: 20px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: 0.3s;
+        border: 2px solid #fff;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    input:checked + .slider {
+        background-color: #8000ff;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
 </style>
 </head>
+
 <body>
 
-<div class="console" id="console1"></div>
-<div class="console" id="console2"></div>
-<div class="console" id="console3"></div>
+<div class="menu">
 
-<script>
-const console1 = document.getElementById('console1');
-const console2 = document.getElementById('console2');
-const console3 = document.getElementById('console3');
+    <div class="menu-header">
+        <img src="https://i.postimg.cc/Wpngtt4T/a7957faf6021698c83d187d9f2ff7e20.jpg" alt="logo">
+        <div>
+            <div class="menu-title">NGOTANSANG PRO</div>
+            <div class="username">@ngotansang</div>
+        </div>
+    </div>
 
-const userCommand = "ngotansang";
+    <div class="menu-list">
 
-// Sinh random các loại dữ liệu hacker-like
-const hexChars = "0123456789ABCDEF";
-function randomHex(len=8) { let s=""; for(let i=0;i<len;i++) s+=hexChars[Math.floor(Math.random()*16)]; return "0x"+s; }
-function randomDec(max=99999){ return Math.floor(Math.random()*max); }
-function randomIP(){ return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`; }
-function randomPort(){ return Math.floor(Math.random()*65535); }
-function randomPath(){ return `/usr/lib/${Math.random().toString(36).substring(2,8)}`; }
-function randomLibrary(){ return `lib${Math.random().toString(36).substring(2,5)}.so`; }
-function randomAPI(){ return `api/v${Math.floor(Math.random()*10)}/${Math.random().toString(36).substring(2,5)}`; }
-function randomSIM(){ return `SIM${Math.floor(Math.random()*9999)}`; }
-function randomCER(){ return `CERT-${Math.random().toString(36).substring(2,6)}`; }
+        <div class="menu-item">
+            <span class="menu-item-label">Aimbot</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-function generateHackerLine() {
-  const templates = [
-    () => `LOAD LIBRARY ${randomLibrary()}`,
-    () => `ACCESS PORT ${randomPort()}`,
-    () => `CONNECT API ${randomAPI()}`,
-    () => `FETCH PATH ${randomPath()}`,
-    () => `READ SIM ${randomSIM()}`,
-    () => `VERIFY CER ${randomCER()}`,
-    () => `HEX_VALUE ${randomHex()}`,
-    () => `DEC_VALUE ${randomDec()}`,
-    () => `SCAN IP ${randomIP()} PORT ${randomPort()}`,
-    () => `INIT MODULE ${Math.random().toString(36).substring(2,6)}`,
-    () => `DEPLOY SERVICE ${Math.random().toString(36).substring(2,4)}`
-  ];
-  let template = templates[Math.floor(Math.random()*templates.length)];
-  return template();
-}
+        <div class="menu-item">
+            <span class="menu-item-label">Aimlock</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-// Gõ từng ký tự
-function typeLine(consoleElement, text, colorClass="green", callback) {
-  const line = document.createElement('div');
-  line.className = `line ${colorClass} prompt`;
-  consoleElement.appendChild(line);
-  let i = 0;
-  function typeChar() {
-    if(i<text.length){
-      line.textContent += text[i++];
-      consoleElement.scrollTop = consoleElement.scrollHeight;
-      setTimeout(typeChar, 20);
-    } else if(callback) callback();
-  }
-  typeChar();
-}
+        <div class="menu-item">
+            <span class="menu-item-label">Headshot</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-// Console hacker bình thường vô tận
-function runConsole(consoleElement){
-  function nextCommand(){
-    let cmd = generateHackerLine();
-    let color = Math.random()<0.2?"white":"green";
-    typeLine(consoleElement, cmd, color, ()=>{
-      setTimeout(nextCommand, 150+Math.random()*150);
-    });
-  }
-  nextCommand();
-}
+        <div class="menu-item">
+            <span class="menu-item-label">Recoil</span>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-// Console 3: hỏi – trả lời
-function runInteractiveConsole(consoleElement){
-  function nextCommand(){
-    let askUser = Math.random()<0.1; // 10% lần hỏi user
-    if(askUser){
-      // dòng hỏi
-      typeLine(consoleElement, "QUERY USER INFO", "green", ()=>{
-        // dòng trả lời
-        setTimeout(()=> typeLine(consoleElement, ""+userCommand, "red", ()=>{
-          setTimeout(nextCommand, 200+Math.random()*200);
-        }), 200);
-      });
-    } else {
-      let cmd = generateHackerLine();
-      let color = Math.random()<0.2?"white":"green";
-      typeLine(consoleElement, cmd, color, ()=>{
-        setTimeout(nextCommand, 150+Math.random()*150);
-      });
-    }
-  }
-  nextCommand();
-}
+    </div>
 
-// Bắt đầu chạy
-runConsole(console1);
-runConsole(console2);
-runInteractiveConsole(console3);
-</script>
+</div>
+
 </body>
 </html>
